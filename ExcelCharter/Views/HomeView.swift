@@ -9,6 +9,8 @@ import SwiftUI
 
 struct HomeView: View {
     // MARK: - Properties
+    ///@State variables
+    @State private var showNewFileView = false
     
     ///Array of test files
     let sheetfiles = [
@@ -50,10 +52,13 @@ struct HomeView: View {
             
         
             Button("Add File") {
-                //logic
+                showNewFileView = true
             }
             .buttonStyle(.borderedProminent)
             .bold()
+        }
+        .sheet(isPresented: $showNewFileView) {
+            NewFileView()
         }
     }
 }

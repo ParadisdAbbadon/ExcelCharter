@@ -4,6 +4,9 @@
 //
 //  Created by Paradis d'Abbadon on 05.11.25.
 //
+//  Model detailing how .csv file
+//  data will be handled when imported
+//
 
 import Foundation
 
