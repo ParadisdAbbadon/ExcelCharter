@@ -12,9 +12,9 @@ struct HomeView: View {
     private class FileReference { }
     
     let sheetfiles = [
-            SheetFile(id: ObjectIdentifier(FileReference()), title: "Sheet 1"),
-            SheetFile(id: ObjectIdentifier(FileReference()), title: "Sheet 2"),
-            SheetFile(id: ObjectIdentifier(FileReference()), title: "Sheet 3")
+            SheetFile(id: UUID(), title: "Sheet 1"),
+            SheetFile(id: UUID(), title: "Sheet 2"),
+            SheetFile(id: UUID(), title: "Sheet 3")
         ]
     
     // MARK: - Body

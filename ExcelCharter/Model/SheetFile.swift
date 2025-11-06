@@ -8,7 +8,7 @@
 import Foundation
 
 struct SheetFile: Identifiable {
-    var id: ObjectIdentifier
+    var id: UUID
     var title: String
 
 }
