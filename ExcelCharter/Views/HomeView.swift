@@ -9,7 +9,6 @@ import SwiftUI
 
 struct HomeView: View {
     // MARK: - Properties
-    private class FileReference { }
     
     ///Array of test files
     let sheetfiles = [
