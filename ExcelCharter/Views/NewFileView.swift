@@ -10,11 +10,13 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct NewFileView: View {
     // MARK: - Properties
     @Environment(\.dismiss) private var dismiss
     @State private var newFileName: String = ""
+    @State private var showFileImporter = false
     @FocusState private var newFileFieldIsFocused: Bool
     
     // MARK: - Body
@@ -30,12 +32,25 @@ struct NewFileView: View {
                     .disableAutocorrection(true)
                     .textFieldStyle(.roundedBorder)
                     .padding()
-                
-                ///Temporary addition to preview filename
-                Text("\(newFileName).csv")
-                    .foregroundColor(newFileFieldIsFocused ? .red : .blue)
+                HStack {
+                    ///This HStack is temporary.
+                    Text("File will be saved as: ")
+                        .padding([.trailing], 130)
                     
+                    Text("\(newFileName).csv")
+                        .foregroundColor(newFileFieldIsFocused ? .blue : .gray)
+                }
+                
                 Spacer()
+                
+                HStack {
+                    ///Button to open file importer
+                    Button {
+                        showFileImporter = true
+                    } label: {
+                        Label("Choose File to Import", systemImage: "tray.and.arrow.down")
+                    }
+                }
             }
             .navigationTitle("Add New File")
             .navigationBarTitleDisplayMode(.inline)
@@ -58,6 +73,7 @@ struct NewFileView: View {
         }
     }
         
+    // MARK: - Helper Methods
     private func saveFile() {
         guard !newFileName.isEmpty else { return }
         // Add save logic here
