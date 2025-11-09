@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct HomeView: View {
     // MARK: - Properties
     ///@State variables
-    @State private var showNewFileView = false
+    @State private var showNewFileView = false //May be unnecessary
+    @State private var showFileImporter = false
     
     ///Array of test files
     let sheetfiles = [
@@ -53,17 +55,43 @@ struct HomeView: View {
             
         
             Button("Add File") {
-                showNewFileView = true
+                //showNewFileView = true
+                showFileImporter = true
             }
             .buttonStyle(.borderedProminent)
             .shadow(radius: 5)
             .bold()
         }
-        .sheet(isPresented: $showNewFileView) {
-            NewFileView()
+        .fileImporter(
+                    isPresented: $showFileImporter,
+                    allowedContentTypes: [.commaSeparatedText, .spreadsheet],
+                    allowsMultipleSelection: false
+                ) { result in
+                    switch result {
+                    case .success(let urls):
+                        handleFileImport(urls: urls)
+                    case .failure(let error):
+                        print("File import error: \(error.localizedDescription)")
+                    }
+                }
+            }
+            
+            private func handleFileImport(urls: [URL]) {
+                guard let url = urls.first else { return }
+                
+                // Start accessing the security-scoped resource
+                guard url.startAccessingSecurityScopedResource() else {
+                    print("Couldn't access file")
+                    return
+                }
+                
+                defer { url.stopAccessingSecurityScopedResource() }
+                
+                // Process your file here
+                print("Selected file: \(url.lastPathComponent)")
+                // Add your file processing logic
+            }
         }
-    }
-}
 // MARK: - Preview
 #Preview {
     HomeView()
