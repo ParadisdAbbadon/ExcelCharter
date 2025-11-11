@@ -11,7 +11,8 @@
 import Foundation
 
 struct SheetFile: Identifiable {
-    var id: UUID
+    let id: UUID
     var title: String
-
+    var url: URL?
+    var data: [[String]]? 
 }

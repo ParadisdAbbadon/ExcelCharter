@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		BCA9661F2EC2E9AB00A6DDB1 /* CoreXLSX in Frameworks */ = {isa = PBXBuildFile; productRef = BCA9661E2EC2E9AB00A6DDB1 /* CoreXLSX */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		BCA965A62EBC4FE700A6DDB1 /* ExcelCharter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExcelCharter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCA9661F2EC2E9AB00A6DDB1 /* CoreXLSX in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = ExcelCharter;
 			packageProductDependencies = (
+				BCA9661E2EC2E9AB00A6DDB1 /* CoreXLSX */,
 			);
 			productName = ExcelCharter;
 			productReference = BCA965A62EBC4FE700A6DDB1 /* ExcelCharter.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = BCA9659D2EBC4FE700A6DDB1;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				BCA9661D2EC2E9AB00A6DDB1 /* XCRemoteSwiftPackageReference "CoreXLSX" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = BCA965A72EBC4FE700A6DDB1 /* Products */;
 			projectDirPath = "";
@@ -328,6 +337,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BCA9661D2EC2E9AB00A6DDB1 /* XCRemoteSwiftPackageReference "CoreXLSX" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CoreOffice/CoreXLSX";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.14.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BCA9661E2EC2E9AB00A6DDB1 /* CoreXLSX */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BCA9661D2EC2E9AB00A6DDB1 /* XCRemoteSwiftPackageReference "CoreXLSX" */;
+			productName = CoreXLSX;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BCA9659E2EBC4FE700A6DDB1 /* Project object */;
 }
