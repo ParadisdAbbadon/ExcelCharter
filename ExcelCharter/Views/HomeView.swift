@@ -77,6 +77,7 @@ struct HomeView: View {
         }
     }
     
+    // MARK: - Helper Methods
     private func handleFileImport(urls: [URL]) {
         guard let url = urls.first else { return }
         
