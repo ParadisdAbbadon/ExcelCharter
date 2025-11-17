@@ -6,10 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 import UniformTypeIdentifiers
 
 struct HomeView: View {
     // MARK: - Properties
+    @Environment(\.modelContext) private var modelContext
+    @Query(sort: \SheetFile.dateImported, order: .reverse) private var sheetFiles: [SheetFile]
+    
     @State private var viewModel = FileImportViewModel()
     @State private var showFileImporter = false
     
@@ -17,18 +21,44 @@ struct HomeView: View {
         // MARK: - Body
         NavigationStack {
             List {
-                ForEach(viewModel.sheetfiles) { sheetfile in
+                ForEach(sheetFiles) { sheetfile in
                     NavigationLink {
-                        Text("Temporary")
+                        SheetDetailView(sheetFile: sheetfile)
                     } label: {
-                        Text(sheetfile.title)
-                            .font(.title2)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(sheetfile.title)
+                                .font(.title2)
+                            
+                            HStack {
+                                Text(sheetfile.fileExtension.uppercased())
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                
+                                Spacer()
+                                
+                                Text(sheetfile.dateImported, style: .date)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .padding(.vertical, 4)
                     }
                 }
+                .onDelete(perform: deleteFiles)
             }
             .navigationTitle("Home")
             .listStyle(.plain)
+            .overlay {
+                if sheetFiles.isEmpty {
+                    ContentUnavailableView {
+                        Label("No Files", systemImage: "doc.fill")
+                    } description: {
+                        Text("Import a CSV or Excel file to get started")
+                    }
+                }
+            }
         }
+        
         HStack {
             Button(action: {
                 print("search button tapped")
@@ -55,7 +85,11 @@ struct HomeView: View {
         ) { result in
             handleFileImport(result: result)
         }
+        .onAppear {
+            viewModel.setModelContext(modelContext)
+        }
     }
+    
     // MARK: - Helper Methods
     private func handleFileImport(result: Result<[URL], Error>) {
         switch result {
@@ -75,8 +109,17 @@ struct HomeView: View {
             print("File import error: \(error.localizedDescription)")
         }
     }
+    
+    private func deleteFiles(at offsets: IndexSet) {
+        for index in offsets {
+            let sheetFile = sheetFiles[index]
+            viewModel.removeFile(sheetFile)
+        }
+    }
 }
+
 // MARK: - Preview
 #Preview {
     HomeView()
+        .modelContainer(for: SheetFile.self, inMemory: true)
 }
