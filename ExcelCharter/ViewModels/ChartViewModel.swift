@@ -2,7 +2,7 @@
 //  ChartViewModel.swift
 //  ExcelCharter
 //
-//  ViewModel for managing chart configuration and data validation
+//  Created by Paradis d'Abbadon on 28.11.25.
 //
 
 import Foundation
@@ -43,7 +43,7 @@ class ChartViewModel {
         }
         
         // Validate initial selection
-        validateSelection(data: data)
+        _ = validateSelection(data: data)
     }
     
     /// Validate if the current column selection can produce a valid chart

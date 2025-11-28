@@ -2,10 +2,7 @@
 //  SheetFile.swift
 //  ExcelCharter
 //
-//  Created by Paradis d'Abbadon on 05.11.25.
-//
-//  Model detailing how .csv file
-//  data will be handled when imported
+//  Created by Paradis d'Abbadon on 28.11.25.
 //
 
 import Foundation
@@ -20,6 +17,10 @@ class SheetFile {
     
     // Store the 2D array as JSON data
     @Attribute(.externalStorage) private var rawData: Data?
+    
+    // Relationship to chart configurations
+    @Relationship(deleteRule: .cascade, inverse: \ChartConfiguration.sheetFile)
+    var chartConfigurations: [ChartConfiguration]? = []
     
     // Computed property to access the data array
     var data: [[String]]? {

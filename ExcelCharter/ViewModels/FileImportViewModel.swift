@@ -2,6 +2,8 @@
 //  FileImportViewModel.swift
 //  ExcelCharter
 //
+//  Created by Paradis d'Abbadon on 28.11.25.
+//
 
 import Foundation
 import CoreXLSX

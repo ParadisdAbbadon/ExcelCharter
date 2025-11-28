@@ -2,7 +2,7 @@
 //  ChartConfiguration.swift
 //  ExcelCharter
 //
-//  Model for saving chart configurations
+//  Created by Paradis d'Abbadon on 28.11.25.
 //
 
 import Foundation

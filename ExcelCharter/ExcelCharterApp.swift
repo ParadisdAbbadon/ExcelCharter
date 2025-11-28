@@ -2,7 +2,7 @@
 //  ExcelCharterApp.swift
 //  ExcelCharter
 //
-//  Created by Paradis d'Abbadon on 05.11.25.
+//  Created by Paradis d'Abbadon on 28.11.25.
 //
 
 import SwiftUI
@@ -13,6 +13,7 @@ struct ExcelCharterApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             SheetFile.self,
+            ChartConfiguration.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         

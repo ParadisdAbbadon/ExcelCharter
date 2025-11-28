@@ -2,11 +2,12 @@
 //  FullChartView.swift
 //  ExcelCharter
 //
-//  Full-screen chart view with export and share options
+//  Created by Paradis d'Abbadon on 28.11.25.
 //
 
 import SwiftUI
 import Charts
+import SwiftData
 
 struct FullChartView: View {
     let chartConfig: ChartConfiguration
