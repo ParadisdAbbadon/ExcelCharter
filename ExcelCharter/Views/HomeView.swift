@@ -57,26 +57,30 @@ struct HomeView: View {
                     }
                 }
             }
-        }
-        
-        HStack {
-            Button(action: {
-                print("search button tapped")
-            }) {
-                Image(systemName: "magnifyingglass")
-                    .resizable()
-                    .frame(width: 20, height: 22)
+            .safeAreaInset(edge: .bottom) {
+                HStack(spacing: 12) {
+                    Button(action: {
+                        print("search button tapped")
+                    }) {
+                        Image(systemName: "magnifyingglass")
+                            .resizable()
+                            .frame(width: 20, height: 22)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .shadow(radius: 5)
+                    .tint(.gray)
+                    
+                    Button("Add File") {
+                        showFileImporter = true
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .shadow(radius: 5)
+                    .bold()
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(.ultraThinMaterial)
             }
-            .buttonStyle(.borderedProminent)
-            .shadow(radius: 5)
-            .tint(.gray)
-            
-            Button("Add File") {
-                showFileImporter = true
-            }
-            .buttonStyle(.borderedProminent)
-            .shadow(radius: 5)
-            .bold()
         }
         .fileImporter(
             isPresented: $showFileImporter,
