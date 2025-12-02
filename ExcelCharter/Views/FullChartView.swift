@@ -10,6 +10,7 @@ import Charts
 import SwiftData
 
 struct FullChartView: View {
+    // MARK: - Properties
     let chartConfig: ChartConfiguration
     let sheetFile: SheetFile
     
@@ -21,8 +22,10 @@ struct FullChartView: View {
     @State private var showEditSheet = false
     @State private var showDeleteAlert = false
     @State private var renderedImage: UIImage?
+    @State private var isExporting = false
     
     var body: some View {
+        // MARK: - Body
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
@@ -69,6 +72,20 @@ struct FullChartView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .shadow(radius: 2)
                         .padding(.horizontal)
+                        .overlay {
+                            if isExporting {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(.ultraThinMaterial)
+                                    
+                                    ProgressView("Preparing to share...")
+                                        .padding()
+                                        .background(Color(.systemBackground))
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                                }
+                                .padding(.horizontal)
+                            }
+                        }
                 }
                 .padding(.vertical)
             }
@@ -86,6 +103,17 @@ struct FullChartView: View {
                     }
                 }
                 
+                // Direct share button
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        shareChart()
+                    } label: {
+                        Image(systemName: "square.and.arrow.up")
+                    }
+                    .disabled(isExporting)
+                }
+                
+                // More options menu
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Button {
@@ -95,15 +123,9 @@ struct FullChartView: View {
                         }
                         
                         Button {
-                            exportChartAsImage()
-                        } label: {
-                            Label("Export as Image", systemImage: "square.and.arrow.up")
-                        }
-                        
-                        Button {
                             shareChart()
                         } label: {
-                            Label("Share", systemImage: "square.and.arrow.up")
+                            Label("Share & Export", systemImage: "square.and.arrow.up")
                         }
                         
                         Divider()
@@ -116,6 +138,7 @@ struct FullChartView: View {
                     } label: {
                         Image(systemName: "ellipsis.circle")
                     }
+                    .disabled(isExporting)
                 }
             }
             .onAppear {
@@ -126,7 +149,14 @@ struct FullChartView: View {
             }
             .sheet(isPresented: $showShareSheet) {
                 if let image = renderedImage {
-                    ShareSheet(items: [image])
+                    ShareSheet(
+                        items: createShareItems(image: image),
+                        onDismiss: {
+                            // Haptic feedback on successful share
+                            let generator = UINotificationFeedbackGenerator()
+                            generator.notificationOccurred(.success)
+                        }
+                    )
                 }
             }
             .alert("Delete Chart", isPresented: $showDeleteAlert) {
@@ -234,27 +264,42 @@ struct FullChartView: View {
         _ = viewModel.validateSelection(data: data)
     }
     
-    private func exportChartAsImage() {
-        let renderer = ImageRenderer(content: chartView.frame(width: 800, height: 600))
-        renderer.scale = 3.0
+    private func shareChart() {
+        isExporting = true
         
-        if let image = renderer.uiImage {
-            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        // Render chart with slight delay to show loading state
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            let renderer = ImageRenderer(content: chartView.frame(width: 1200, height: 800))
+            renderer.scale = 3.0
             
-            // Show success feedback
-            let generator = UINotificationFeedbackGenerator()
-            generator.notificationOccurred(.success)
+            if let image = renderer.uiImage {
+                renderedImage = image
+                isExporting = false
+                showShareSheet = true
+                
+                // Haptic feedback when rendering completes
+                let generator = UIImpactFeedbackGenerator(style: .medium)
+                generator.impactOccurred()
+            } else {
+                isExporting = false
+                // Could show an error alert here
+                print("Failed to render chart image")
+            }
         }
     }
     
-    private func shareChart() {
-        let renderer = ImageRenderer(content: chartView.frame(width: 800, height: 600))
-        renderer.scale = 3.0
+    private func createShareItems(image: UIImage) -> [Any] {
+        // Create rich share content
+        let chartInfo = """
+        Chart: \(chartConfig.name)
+        Type: \(chartConfig.chartTypeEnum.rawValue)
+        Source: \(sheetFile.title)
+        Created: \(chartConfig.dateCreated.formatted(date: .abbreviated, time: .omitted))
         
-        if let image = renderer.uiImage {
-            renderedImage = image
-            showShareSheet = true
-        }
+        Generated by ExcelCharter
+        """
+        
+        return [image, chartInfo]
     }
     
     private func deleteChart() {
@@ -273,9 +318,15 @@ struct FullChartView: View {
 
 struct ShareSheet: UIViewControllerRepresentable {
     let items: [Any]
+    var onDismiss: (() -> Void)?
     
     func makeUIViewController(context: Context) -> UIActivityViewController {
         let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        controller.completionWithItemsHandler = { _, completed, _, _ in
+            if completed {
+                onDismiss?()
+            }
+        }
         return controller
     }
     
